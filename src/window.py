@@ -1,5 +1,6 @@
 from tkinter import Tk, Frame, Entry, Grid, ttk, StringVar, Canvas
-from remainder import find_remainder, check_overlap
+from remainder import find_remainder, check_overlap, mark
+from square import Square
 
 class Window():
     def __init__(self):
@@ -23,7 +24,9 @@ class Window():
         self._result_frame.grid(column=1, row=0)
         self._build_result_frame()
 
-        self._display_frame = ttk.Frame(self._root,).grid(column=0, row=1, columnspan=2, sticky='we')
+        self._display_frame = ttk.Frame(
+            self._root,).grid(column=0, row=1, columnspan=2, sticky='we'
+        )
         self._build_display_frame()
 
         self._root.columnconfigure(0, weight=1)
@@ -75,19 +78,19 @@ class Window():
         rem = self.remainder.get()
         ttk.Label(
             self._result_frame, text='Remaining squares in row/column: ', font=('Arial', 20)
-        ).grid(column=0, row=0, sticky='e')
+        ).grid(column=0, row=0, sticky='e', padx=5)
 
         label_remainder = ttk.Label(
             self._result_frame, textvariable=self.remainder, font=('Arial', 20)
-        ).grid(column=1, row=0, sticky='w')
+        ).grid(column=1, row=0, sticky='w', padx=5)
 
         ttk.Label(
             self._result_frame, text='Overlap?: ', font=('Arial', 20)
-        ).grid(column=0,row=1, sticky='e')
+        ).grid(column=0,row=1, sticky='e', padx=5)
 
         label_overlap = ttk.Label(
             self._result_frame, textvariable=self.overlap, font=('Arial', 20)
-        ).grid(column=1, row=1, sticky='w')
+        ).grid(column=1, row=1, sticky='w', padx=5)
 
     def _build_display_frame(self):
         self.horizontal = Canvas(self._display_frame, width=200, height=100)
@@ -95,10 +98,10 @@ class Window():
     
     def _find_remainder(self, *args):
         _lst = self.lst.get()
-        int_list = [int(num.strip()) for num in _lst.split(',')]
-        rem = find_remainder(int(self.length.get()), int_list)
+        self.int_list = [int(num.strip()) for num in _lst.split(',')]
+        rem = find_remainder(int(self.length.get()), self.int_list)
         self.remainder.set(str(rem))
-        overlap = check_overlap(int_list, rem)
+        overlap = check_overlap(self.int_list, rem)
         self.overlap.set(overlap)
         self.draw_grid()
 
@@ -113,12 +116,24 @@ class Window():
         square_size = 52
 
         start = (canvas_width - count * square_size) // 2
+        sqrs = []
 
         for i in range(count):
             x1 = start + i * square_size
-            y1 = 0
+            y1 = 2
             x2 = x1 + square_size
-            y2 = square_size
-            self.horizontal.create_rectangle(
-                x1, y1, x2, y2, fill='white', outline='black', width=2
-            )
+            y2 = 2 + square_size
+            sq = Square(x1,y1,x2,y2)
+            sqrs.append(sq)
+
+        marked = mark(sqrs, self.int_list, int(self.remainder.get()))
+
+        for e in marked:
+            if e.is_marked == False:
+                self.horizontal.create_rectangle(
+                    e.x1, e.y1, e.x2, e.y2, fill='white', outline='black', width=2
+                )
+            else:
+                self.horizontal.create_rectangle(
+                    e.x1, e.y1, e.x2, e.y2, fill='black', outline='white', width=2
+                )
