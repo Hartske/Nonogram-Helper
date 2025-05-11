@@ -141,12 +141,23 @@ class Window():
 
         marked = mark(sqrs, self.int_list, int(self.remainder.get()))
 
+        i = 1
         for e in marked:
             if e.is_marked == False:
                 self.horizontal.create_rectangle(
                     e.x1, e.y1, e.x2, e.y2, fill='white', outline='black', width=2
                 )
+                self.horizontal.create_text(
+                    (e.x1 + e.x2) // 2, (e.y1 + e.y2) // 2 + square_size,
+                    text=str(i), font=('Arial', 20)
+                )
+                i += 1
             else:
                 self.horizontal.create_rectangle(
                     e.x1, e.y1, e.x2, e.y2, fill='black', outline='white', width=2
                 )
+                self.horizontal.create_text(
+                    (e.x1 + e.x2) // 2, (e.y1 + e.y2) // 2 + square_size,
+                    text=str(i), font=('Arial', 20)
+                )
+                i += 1
