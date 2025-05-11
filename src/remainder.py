@@ -22,6 +22,7 @@ def mark(sqrs, lst, remainder):
             for s in sqrs[index:(index - remainder + e)]:
                 s.is_marked = True
                 index += 1
+            index += 1
         else:
             index += e + 1
     return sqrs
