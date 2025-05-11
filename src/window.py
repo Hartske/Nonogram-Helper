@@ -1,4 +1,5 @@
 from tkinter import Tk, Frame, Entry, Grid, ttk, StringVar, Canvas
+from tkinter.ttk import Style
 from remainder import find_remainder, check_overlap, mark
 from square import Square
 
@@ -11,6 +12,7 @@ class Window():
         self.remainder = StringVar(value=0)
         self.lst = StringVar(value=0)
         self.overlap = StringVar(value='False')
+        self.error = StringVar()
 
         self._entry_frame = ttk.Frame(
             self._root, borderwidth=2, relief='solid'
@@ -48,10 +50,10 @@ class Window():
         )
 
         # Entry window for length of column or row
-        length_entry = ttk.Entry(
-            self._entry_frame, width=7, textvariable=self.length, font=('Arial', 20)
+        self.length_entry = ttk.Entry(
+            self._entry_frame, width=8, textvariable=self.length, font=('Arial', 20)
         )
-        length_entry.grid(column=1, row=0, sticky='w')
+        self.length_entry.grid(column=1, row=0, sticky='w')
 
         # Text label for list entry window
         ttk.Label(
@@ -72,7 +74,7 @@ class Window():
             text='Find Remainder', command=self._find_remainder
         ).grid(column=0, row=3, columnspan=2)
 
-        length_entry.focus()
+        self.length_entry.focus()
 
     def _build_result_frame(self):
         rem = self.remainder.get()
@@ -85,12 +87,19 @@ class Window():
         ).grid(column=1, row=0, sticky='w', padx=5)
 
         ttk.Label(
-            self._result_frame, text='Overlap?: ', font=('Arial', 20)
+            self._result_frame, text='Overlap?: ', font=('Arial', 20, )
         ).grid(column=0,row=1, sticky='e', padx=5)
 
         label_overlap = ttk.Label(
             self._result_frame, textvariable=self.overlap, font=('Arial', 20)
         ).grid(column=1, row=1, sticky='w', padx=5)
+
+        error_style = Style()
+        error_style.configure('Error.TLabel', foreground='red')
+        self.error_label = ttk.Label(
+            self._result_frame,
+            textvariable=self.error, font=('Arial', 20), style='Error.TLabel'
+        ).grid(column=0, row=2, columnspan=2)
 
     def _build_display_frame(self):
         self.horizontal = Canvas(self._display_frame, width=200, height=100)
@@ -99,11 +108,15 @@ class Window():
     def _find_remainder(self, *args):
         _lst = self.lst.get()
         self.int_list = [int(num.strip()) for num in _lst.split(',')]
-        rem = find_remainder(int(self.length.get()), self.int_list)
-        self.remainder.set(str(rem))
-        overlap = check_overlap(self.int_list, rem)
-        self.overlap.set(overlap)
-        self.draw_grid()
+        if sum(self.int_list) > int(self.length.get()):
+            self.error.set('Sum of numbers is greater than the length')
+        else:
+            self.error.set('')
+            rem = find_remainder(int(self.length.get()), self.int_list)
+            self.remainder.set(str(rem))
+            overlap = check_overlap(self.int_list, rem)
+            self.overlap.set(overlap)
+            self.draw_grid()
 
     def draw_grid(self):
         count = int(self.length.get())
