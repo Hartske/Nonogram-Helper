@@ -106,17 +106,20 @@ class Window():
         self.horizontal.grid(column=0, row=1, columnspan=2, sticky='we')
     
     def _find_remainder(self, *args):
-        _lst = self.lst.get()
-        self.int_list = [int(num.strip()) for num in _lst.split(',')]
-        if sum(self.int_list) > int(self.length.get()):
-            self.error.set('Sum of numbers is greater than the length')
-        else:
-            self.error.set('')
-            rem = find_remainder(int(self.length.get()), self.int_list)
-            self.remainder.set(str(rem))
-            overlap = check_overlap(self.int_list, rem)
-            self.overlap.set(overlap)
-            self.draw_grid()
+        try:
+            _lst = self.lst.get()
+            self.int_list = [int(num.strip()) for num in _lst.split(',')]
+            if sum(self.int_list) > int(self.length.get()):
+                self.error.set('Sum of numbers is greater than the length')
+            else:
+                self.error.set('')
+                rem = find_remainder(int(self.length.get()), self.int_list)
+                self.remainder.set(str(rem))
+                overlap = check_overlap(self.int_list, rem)
+                self.overlap.set(overlap)
+                self.draw_grid()
+        except ValueError:
+            self.error.set('Only input numbers')
 
     def draw_grid(self):
         count = int(self.length.get())
