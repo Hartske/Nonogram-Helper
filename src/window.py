@@ -1,4 +1,4 @@
-from tkinter import Tk, Frame, Entry, Grid, ttk, StringVar
+from tkinter import Tk, Frame, Entry, Grid, ttk, StringVar, Canvas
 from remainder import find_remainder, check_overlap
 
 class Window():
@@ -23,6 +23,13 @@ class Window():
         self._result_frame.grid(column=1, row=0)
         self._build_result_frame()
 
+        self._display_frame = ttk.Frame(self._root,).grid(column=0, row=1, columnspan=2, sticky='we')
+        self._build_display_frame()
+
+        self._root.columnconfigure(0, weight=1)
+        self._root.columnconfigure(1, weight=1)
+        self._root.rowconfigure(0, weight=1)
+        self._root.rowconfigure(1, weight=1)
         # Focus and run
         self.run()
 
@@ -82,7 +89,9 @@ class Window():
             self._result_frame, textvariable=self.overlap, font=('Arial', 20)
         ).grid(column=1, row=1, sticky='w')
 
-
+    def _build_display_frame(self):
+        self.horizontal = Canvas(self._display_frame, width=200, height=100)
+        self.horizontal.grid(column=0, row=1, columnspan=2, sticky='we')
     
     def _find_remainder(self, *args):
         _lst = self.lst.get()
@@ -91,3 +100,25 @@ class Window():
         self.remainder.set(str(rem))
         overlap = check_overlap(int_list, rem)
         self.overlap.set(overlap)
+        self.draw_grid()
+
+    def draw_grid(self):
+        count = int(self.length.get())
+        
+        self.horizontal.delete('all')
+
+        canvas_width = self.horizontal.winfo_width()
+        canvas_height = self.horizontal.winfo_height()
+
+        square_size = 52
+
+        start = (canvas_width - count * square_size) // 2
+
+        for i in range(count):
+            x1 = start + i * square_size
+            y1 = 0
+            x2 = x1 + square_size
+            y2 = square_size
+            self.horizontal.create_rectangle(
+                x1, y1, x2, y2, fill='white', outline='black', width=2
+            )
