@@ -113,7 +113,7 @@ class Window():
         canvas_width = self.horizontal.winfo_width()
         canvas_height = self.horizontal.winfo_height()
 
-        square_size = 52
+        square_size = 1040 // count
 
         start = (canvas_width - count * square_size) // 2
         sqrs = []
