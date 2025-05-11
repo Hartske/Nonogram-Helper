@@ -1,5 +1,5 @@
 from tkinter import Tk, Frame, Entry, Grid, ttk, StringVar
-from remainder import find_remainder
+from remainder import find_remainder, check_overlap
 
 class Window():
     def __init__(self):
@@ -8,9 +8,8 @@ class Window():
         self._root.grid()
         self.length = StringVar(value=0)
         self.remainder = StringVar(value=0)
-        self.remainder.trace('w', self._find_remainder)
         self.lst = StringVar(value=0)
-        self.lst.trace('w', self.tester)
+        self.overlap = StringVar(value='False')
 
         self._entry_frame = ttk.Frame(
             self._root, borderwidth=2, relief='solid'
@@ -79,6 +78,10 @@ class Window():
             self._result_frame, text='Overlap?: ', font=('Arial', 20)
         ).grid(column=0,row=1, sticky='e')
 
+        label_overlap = ttk.Label(
+            self._result_frame, textvariable=self.overlap, font=('Arial', 20)
+        ).grid(column=1, row=1, sticky='w')
+
 
     
     def _find_remainder(self, *args):
@@ -86,6 +89,5 @@ class Window():
         int_list = [int(num.strip()) for num in _lst.split(',')]
         rem = find_remainder(int(self.length.get()), int_list)
         self.remainder.set(str(rem))
-
-    def tester(self, *args):
-        print(f'List: {self.lst.get()}')
+        overlap = check_overlap(int_list, rem)
+        self.overlap.set(overlap)

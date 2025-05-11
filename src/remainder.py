@@ -8,9 +8,8 @@ def find_remainder(length, lst):
     print(f'Remainder: {remainder}')
     return remainder
 
-def convert_list(lst):
-    no_space = lst.replace(" ", "")
-    converted = no_space.split(",")
-    for e in converted:
-        int(e)
-    return converted
+def check_overlap(lst, remainder):
+    for e in lst:
+        if e > remainder:
+            return 'True'
+    return 'False'
