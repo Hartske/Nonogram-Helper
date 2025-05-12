@@ -1,6 +1,6 @@
-from window import Window
+from window import Window, Entry_Window
 
 def main():
-    win = Window()
+    win = Entry_Window()
 
 main()
