@@ -1,4 +1,4 @@
-from window import Window, Entry_Window
+from window import Entry_Window
 
 def main():
     win = Entry_Window()
