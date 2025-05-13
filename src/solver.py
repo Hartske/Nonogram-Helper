@@ -1,4 +1,5 @@
-from tkinter import Tk, Frame, Entry, Grid, ttk, StringVar, Canvas, Style
+from tkinter import Tk, Frame, Entry, Grid, ttk, StringVar, Canvas
+from tkinter.ttk import Style
 
 class Solver_Config():
     def __init__(self):
