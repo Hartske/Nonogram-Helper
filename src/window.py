@@ -1,6 +1,6 @@
-from tkinter import Tk, Frame, Entry, Grid, ttk, StringVar, Canvas
-from tkinter.ttk import Style
+from tkinter import Tk, Frame, Grid, ttk
 from helper import Helper_Window
+from solver import Solver_Config
 
 class Entry_Window():
     def __init__(self):
@@ -55,6 +55,5 @@ class Entry_Window():
         Helper_Window()
 
     def _launch_solver(self):
-        pass
-
-
+        self._root.destroy()
+        Solver_Config()
