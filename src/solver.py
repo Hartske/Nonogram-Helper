@@ -27,34 +27,39 @@ class Solver_Config():
         self.row_display = ttk.Labelframe(
             self._display_frame, text='Rows'
         )
-        self.row_display.grid(column=0, row=0, sticky='we')
+        self.row_display.grid(column=0, row=1, sticky='we')
 
         self.col_display = ttk.Labelframe(
             self._display_frame, text='Columns'
         )
-        self.col_display.grid(column=0, row=1, sticky='we')
+        self.col_display.grid(column=0, row=0, sticky='we')
     
     def _fill_display_frame(self):
-        _row = 0
-        for e in self._col_row_lst:
-            for j in range(len(self._col_row_lst[0])):
-                ttk.Label(
-                    self.col_display, text=self._col_row_lst[0][j]
-                ).grid(column=0, row=_row)
-                _row += 1
-            for j in range(len(self._col_row_lst[1])):
-                ttk.Label(
-                    self.row_display, text=self._col_row_lst[1][j]
-                ).grid(column=0, row=_row)
-                _row += 1
+        for widget in self.col_display.winfo_children():
+            widget.destroy()
+        for widget in self.row_display.winfo_children():
+            widget.destroy()
+
+        for e, col_list in enumerate(self._col_row_lst[0]):
+            ttk.Label(
+                self.col_display, text=col_list
+            ).grid(column=0, row=e)
+
+        for e, col_list in enumerate(self._col_row_lst[1]):
+            ttk.Label(
+                self.row_display, text=col_list
+            ).grid(column=0,row=e)
+            
 
     def _build_entry_frame(self):
         row = ttk.Radiobutton(
-            self._entry_frame, text='Column', variable=self._col_row, value=1
+            self._entry_frame, text='Column', variable=self._col_row, value='1'
         ).grid(column=0, row=0)
         col = ttk.Radiobutton(
-            self._entry_frame, text='Row', variable=self._col_row, value=2
+            self._entry_frame, text='Row', variable=self._col_row, value='2'
         ).grid(column=1, row=0, sticky='e')
+
+        self._col_row.set('1')
 
         ttk.Label(
             self._entry_frame,
@@ -78,18 +83,22 @@ class Solver_Config():
     def _set_list(self):
         _lst = self.lst.get()
         print(f'Sent list: {_lst}')
-        int_list = [int(num.strip()) for num in _lst.split(',')]
-        print(f'Converted list: {int_list}')
-        print(f'Button value: {self._col_row.get()}')
-        button_val = self._col_row.get()
-        if button_val == '1':
-            self._col_row_lst[0].append(int_list)
-        if button_val == '2':
-            self._col_row_lst[1].append(int_list)
-        else:
-            print('Check fail')
-        self._fill_display_frame()
-        print(f'Col/Row list: {self._col_row_lst}')
+        try:
+            int_list = [int(num.strip()) for num in _lst.split(',')]
+            print(f'Converted list: {int_list}')
+            print(f'Button value: {self._col_row.get()}')
+            button_val = self._col_row.get()
+            if button_val == '1':
+                self._col_row_lst[0].append(int_list)
+            elif button_val == '2':
+                self._col_row_lst[1].append(int_list)
+            else:
+                print('Check fail')
+            self._fill_display_frame()
+            self.lst.set('')
+            print(f'Col/Row list: {self._col_row_lst}')
+        except ValueError:
+            print("Invalid input format.")
 
     def print_entry_text(self, *kwargs):
         text = self.lst.get()
