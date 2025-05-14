@@ -24,15 +24,23 @@ class Solver_Config():
         
 
     def _build_display_frame(self):
+        self.col_display = ttk.Labelframe(
+            self._display_frame, text='Columns'
+        )
+        self.col_display.grid(column=0, row=0, sticky='we')
+
+        ttk.Label(
+            self.col_display, text='', width=20
+        ).grid(column=0, row=0, padx=5, pady=5)
+
         self.row_display = ttk.Labelframe(
             self._display_frame, text='Rows'
         )
         self.row_display.grid(column=0, row=1, sticky='we')
 
-        self.col_display = ttk.Labelframe(
-            self._display_frame, text='Columns'
-        )
-        self.col_display.grid(column=0, row=0, sticky='we')
+        ttk.Label(
+            self.row_display, text='', width=20
+        ).grid(column=0, row=0, padx=5, pady=5)
     
     def _fill_display_frame(self):
         for widget in self.col_display.winfo_children():
@@ -42,13 +50,13 @@ class Solver_Config():
 
         for e, col_list in enumerate(self._col_row_lst[0]):
             ttk.Label(
-                self.col_display, text=col_list
-            ).grid(column=0, row=e)
+                self.col_display, text=col_list, width=20, font=('Arial', 14)
+            ).grid(column=0, row=e, padx=5, pady=5)
 
         for e, col_list in enumerate(self._col_row_lst[1]):
             ttk.Label(
-                self.row_display, text=col_list
-            ).grid(column=0,row=e)
+                self.row_display, text=col_list, width=20, font=('Arial', 14)
+            ).grid(column=0,row=e, padx=5, pady=5)
             
 
     def _build_entry_frame(self):
@@ -79,6 +87,10 @@ class Solver_Config():
             self._entry_frame, text='Confirm Row/Column', command=self._set_list
         ).grid(column=1, row=3)
 
+        ttk.Button(
+            self._entry_frame, text='Solve!', command=self._solve
+        )
+
 
     def _set_list(self):
         _lst = self.lst.get()
@@ -103,6 +115,9 @@ class Solver_Config():
     def print_entry_text(self, *kwargs):
         text = self.lst.get()
         print(text)
+
+    def _solve(self):
+        pass
 
 class Solver_Window():
     pass
